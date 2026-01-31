@@ -63,5 +63,8 @@ https://gayathrisanthoshpc.github.io/Random-Quote-Machine/
 ```bash
 git clone https://github.com/gayathrisanthoshpc/Random-Quote-Machine.git
 
-**Author**
+
+
+
+## AUTHOR
 Gayathri
