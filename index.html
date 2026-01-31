@@ -171,8 +171,16 @@ function showEmojiPopup(mood) {
 }
 
 function fetchQuote() {
-  const random = Math.floor(Math.random() * quotes.length);
-  const quote = quotes[random];
+ 
+  const selectedCategory = document.getElementById("category").value;
+  let filteredQuotes = quotes;
+
+  if (selectedCategory !== "all") {
+    filteredQuotes = quotes.filter(q => q.mood === selectedCategory);
+  }
+
+  const random = Math.floor(Math.random() * filteredQuotes.length);
+  const quote = filteredQuotes[random];
 
   quoteEl.style.opacity = 0;
   authorEl.style.opacity = 0;
@@ -184,6 +192,8 @@ function fetchQuote() {
     authorEl.style.opacity = 1;
     applyMood(quote.mood);
   }, 300);
+
+
 }
 
 newBtn.addEventListener("click", fetchQuote);
