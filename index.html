@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Animated Mood Quote Machine</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#2c3e50,#4ca1af);
+    transition: background 2s ease;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  .card {
+    background: rgba(0,0,0,0.7);
+    padding: 30px 40px;
+    width: 480px;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    text-align: center;
+    transition: transform 0.5s, background 1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #quote {
+    font-size: 22px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  #author {
+    font-size: 16px;
+    margin-bottom: 25px;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  #new-quote {
+    background: #1abc9c;
+    color: #fff;
+  }
+
+  #tweet-quote {
+    background: #55acee;
+    color: #fff;
+  }
+
+  .emoji-btn {
+    font-size: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: transform 0.2s;
+  }
+
+  .emoji-btn:hover {
+    transform: scale(1.3);
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  /* Animated emoji popup */
+  .emoji-popup {
+    position: absolute;
+    font-size: 40px;
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: pop 1s forwards;
+    pointer-events: none;
+  }
+
+  @keyframes pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -80%) scale(1.3); }
+    100% { opacity: 0; transform: translate(-50%, -150%) scale(1.5); }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div id="quote">Click "New Quote" for inspiration ✨</div>
+  <div id="author"></div>
+  <button class="btn" id="new-quote">New Quote</button>
+  <button class="btn" id="tweet-quote">Tweet</button>
+  <div style="margin-top:15px;">
+    <button class="emoji-btn" id="happy">😄</button>
+    <button class="emoji-btn" id="sad">😢</button>
+    <button class="emoji-btn" id="mind">🤯</button>
+  </div>
+</div>
+
+<script>
+const quoteEl = document.getElementById("quote");
+const authorEl = document.getElementById("author");
+const newBtn = document.getElementById("new-quote");
+const tweetBtn = document.getElementById("tweet-quote");
+const happyBtn = document.getElementById("happy");
+const sadBtn = document.getElementById("sad");
+const mindBtn = document.getElementById("mind");
+
+const colors = {
+  happy: ["#1abc9c", "#2ecc71"],
+  sad: ["#34495e", "#2c3e50"],
+  mind: ["#9b59b6", "#8e44ad"],
+  default: ["#2c3e50", "#4ca1af"]
+};
+
+const quotes = [
+  { q: "Believe you can and you're halfway there.", a: "Theodore Roosevelt", mood: "happy" },
+  { q: "Do one thing every day that scares you.", a: "Eleanor Roosevelt", mood: "mind" },
+  { q: "Dream big. Start small. Act now.", a: "Robin Sharma", mood: "mind" },
+  { q: "Happiness depends upon ourselves.", a: "Aristotle", mood: "happy" },
+  { q: "Make it work, make it right, make it fast.", a: "Kent Beck", mood: "mind" },
+  { q: "You miss 100% of the shots you don’t take.", a: "Wayne Gretzky", mood: "mind" },
+  { q: "Success is not final, failure is not fatal: it is the courage to continue that counts.", a: "Winston Churchill", mood: "happy" },
+  { q: "It always seems impossible until it’s done.", a: "Nelson Mandela", mood: "mind" },
+  { q: "Even the darkest night will end and the sun will rise.", a: "Victor Hugo", mood: "happy" },
+  { q: "Sometimes it's okay to feel sad and let it out.", a: "Unknown", mood: "sad" }
+];
+
+function applyMood(mood, showEmoji=true) {
+  const card = document.querySelector(".card");
+  const gradient = colors[mood] || colors.default;
+  document.body.style.background = `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`;
+  
+  if(showEmoji) showEmojiPopup(mood);
+}
+
+function showEmojiPopup(mood) {
+  const emojiMap = { happy: "😄", sad: "😢", mind: "🤯" };
+  const emoji = document.createElement("div");
+  emoji.className = "emoji-popup";
+  emoji.textContent = emojiMap[mood] || "✨";
+  document.querySelector(".card").appendChild(emoji);
+  setTimeout(() => emoji.remove(), 1000);
+}
+
+function fetchQuote() {
+  const random = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[random];
+
+  quoteEl.style.opacity = 0;
+  authorEl.style.opacity = 0;
+
+  setTimeout(() => {
+    quoteEl.textContent = `"${quote.q}"`;
+    authorEl.textContent = "- " + quote.a;
+    quoteEl.style.opacity = 1;
+    authorEl.style.opacity = 1;
+    applyMood(quote.mood);
+  }, 300);
+}
+
+newBtn.addEventListener("click", fetchQuote);
+
+tweetBtn.addEventListener("click", () => {
+  const text = `${quoteEl.textContent} ${authorEl.textContent}`;
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, "_blank");
+});
+
+// Manual emoji override
+happyBtn.addEventListener("click", () => {
+  quoteEl.textContent = "😄 Feeling happy is the secret to joy!";
+  authorEl.textContent = "";
+  applyMood("happy", false);
+  showEmojiPopup("happy");
+});
+
+sadBtn.addEventListener("click", () => {
+  quoteEl.textContent = "😢 It's okay to feel sad. Let it pass gently.";
+  authorEl.textContent = "";
+  applyMood("sad", false);
+  showEmojiPopup("sad");
+});
+
+mindBtn.addEventListener("click", () => {
+  quoteEl.textContent = "🤯 Mind blown! Amazing things are possible.";
+  authorEl.textContent = "";
+  applyMood("mind", false);
+  showEmojiPopup("mind");
+});
+
+// Load first quote
+fetchQuote();
+</script>
+
+</body>
+</html>
