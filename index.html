@@ -118,6 +118,7 @@
   <button class="btn" id="new-quote">New Quote</button>
   <button class="btn" id="copy-quote">Copy Quote</button>
   <button class="btn" id="tweet-quote">Tweet</button>
+  <button class="btn" id="listen-quote">🔊 Listen</button>
   <div style="margin-top:15px;">
     <button class="emoji-btn" id="happy">😄</button>
     <button class="emoji-btn" id="sad">😢</button>
@@ -131,6 +132,12 @@ const authorEl = document.getElementById("author");
 const newBtn = document.getElementById("new-quote");
 const tweetBtn = document.getElementById("tweet-quote");
 const copyBtn = document.getElementById("copy-quote");
+  const listenBtn = document.getElementById("listen-quote");
+  listenBtn.addEventListener("click", () => {
+  const text = `${quoteEl.textContent} ${authorEl.textContent}`;
+  const utterance = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(utterance);
+});
 const happyBtn = document.getElementById("happy");
 const sadBtn = document.getElementById("sad");
 const mindBtn = document.getElementById("mind");
