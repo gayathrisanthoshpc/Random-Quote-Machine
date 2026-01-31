@@ -116,6 +116,7 @@
   <div id="quote">Click "New Quote" for inspiration ✨</div>
   <div id="author"></div>
   <button class="btn" id="new-quote">New Quote</button>
+  <button class="btn" id="copy-quote">Copy Quote</button>
   <button class="btn" id="tweet-quote">Tweet</button>
   <div style="margin-top:15px;">
     <button class="emoji-btn" id="happy">😄</button>
@@ -171,16 +172,8 @@ function showEmojiPopup(mood) {
 }
 
 function fetchQuote() {
- 
-  const selectedCategory = document.getElementById("category").value;
-  let filteredQuotes = quotes;
-
-  if (selectedCategory !== "all") {
-    filteredQuotes = quotes.filter(q => q.mood === selectedCategory);
-  }
-
-  const random = Math.floor(Math.random() * filteredQuotes.length);
-  const quote = filteredQuotes[random];
+  const random = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[random];
 
   quoteEl.style.opacity = 0;
   authorEl.style.opacity = 0;
@@ -192,8 +185,6 @@ function fetchQuote() {
     authorEl.style.opacity = 1;
     applyMood(quote.mood);
   }, 300);
-
-
 }
 
 newBtn.addEventListener("click", fetchQuote);
